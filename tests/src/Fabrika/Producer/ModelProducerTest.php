@@ -5,7 +5,7 @@ namespace Fabrika\Producer;
 use Fabrika\Generator\IntegerSequence;
 use Fabrika\Generator\StringSequence;
 
-class PDOProducerTest extends \PHPUnit_Framework_TestCase
+class ModelProducerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var \PDO
@@ -22,27 +22,27 @@ class PDOProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testInstanceOf()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $this->assertInstanceOf('Fabrika\Producer\ArrayProducer', $producer);
     }
 
     public function testTableNameSetterGetter()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setTableName('user');
         $this->assertEquals('user', $producer->getTableName());
     }
 
     public function testModelClassSetterGetter()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setModelClass('Test');
         $this->assertEquals('Test', $producer->getModelClass());
     }
 
     public function testBuild()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setTableName('user');
         $producer->setModelClass('Fabrika\Producer\Fake\User');
 
@@ -67,7 +67,7 @@ class PDOProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testCreate()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setTableName('user');
         $producer->setModelClass('Fabrika\Producer\Fake\User');
 
@@ -97,7 +97,7 @@ class PDOProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setTableName('user');
         $producer->setModelClass('Fabrika\Producer\Fake\User');
 
@@ -122,7 +122,7 @@ class PDOProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testFlush()
     {
-        $producer = new PDOProducer(self::$pdo);
+        $producer = new ModelProducer(self::$pdo);
         $producer->setTableName('user');
         $producer->setModelClass('Fabrika\Producer\Fake\User');
 

@@ -2,9 +2,7 @@
 
 namespace Fabrika\Producer;
 
-use Fabrika\IGenerator;
-
-class PDOProducer extends ArrayProducer
+class ModelProducer extends ArrayProducer
 {
     /**
      * @var \PDO
