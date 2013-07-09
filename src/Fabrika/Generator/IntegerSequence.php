@@ -3,8 +3,9 @@
 namespace Fabrika\Generator;
 
 use Fabrika\IGenerator;
+use Fabrika\IGeneratorOnFlush;
 
-class IntegerSequence implements IGenerator
+class IntegerSequence implements IGenerator, IGeneratorOnFlush
 {
     /**
      * @var int
@@ -30,5 +31,10 @@ class IntegerSequence implements IGenerator
     public function generate()
     {
         return $this->counter = $this->counter + $this->step;
+    }
+
+    public function onFlush()
+    {
+        $this->counter = 0;
     }
 }

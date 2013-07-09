@@ -26,25 +26,11 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Fabrika\Producer\ArrayProducer', $producer);
     }
 
-    public function testTableNameSetterGetter()
-    {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setTableName('user');
-        $this->assertEquals('user', $producer->getTableName());
-    }
-
-    public function testModelClassSetterGetter()
-    {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setModelClass('Test');
-        $this->assertEquals('Test', $producer->getModelClass());
-    }
-
     public function testBuild()
     {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setTableName('user');
-        $producer->setModelClass('Fabrika\Producer\Fake\User');
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
 
         $producer->setDefinition(
             array(
@@ -59,17 +45,17 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
          */
         $user1 = $producer->build();
         $user2 = $producer->build();
-        $this->assertInstanceOf('Fabrika\Producer\Fake\User', $user1);
-        $this->assertInstanceOf('Fabrika\Producer\Fake\User', $user2);
+        $this->assertInstanceOf($modelClass, $user1);
+        $this->assertInstanceOf($modelClass, $user2);
         $this->assertEquals('name1', $user1->name);
         $this->assertEquals('name2', $user2->name);
     }
 
     public function testCreate()
     {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setTableName('user');
-        $producer->setModelClass('Fabrika\Producer\Fake\User');
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
 
         $producer->setDefinition(
             array(
@@ -86,8 +72,7 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
          */
         $user1 = $producer->create();
         $user2 = $producer->create();
-        $this->assertInstanceOf('Fabrika\Producer\Fake\User', $user1);
-        $this->assertInstanceOf('Fabrika\Producer\Fake\User', $user2);
+        $this->assertInstanceOf($modelClass, $user2);
         $this->assertEquals('name1', $user1->name);
         $this->assertEquals('name2', $user2->name);
 
@@ -97,9 +82,9 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setTableName('user');
-        $producer->setModelClass('Fabrika\Producer\Fake\User');
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
 
         $producer->setDefinition(
             array(
@@ -122,9 +107,9 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
 
     public function testFlush()
     {
-        $producer = new ModelProducer(self::$pdo);
-        $producer->setTableName('user');
-        $producer->setModelClass('Fabrika\Producer\Fake\User');
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
 
         $producer->setDefinition(
             array(
@@ -140,5 +125,10 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $producer->flush());
 
         self::$pdo->exec('DROP TABLE user');
+    }
+
+    public function testFlushMustRestSequenceCounters()
+    {
+
     }
 }

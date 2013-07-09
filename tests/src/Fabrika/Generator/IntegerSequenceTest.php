@@ -23,4 +23,13 @@ class IntegerSequenceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $generator->generate());
         $this->assertEquals(4, $generator->generate());
     }
+
+    public function testOnFlush()
+    {
+        $generator = new IntegerSequence();
+        $this->assertEquals(1, $generator->generate());
+        $this->assertEquals(2, $generator->generate());
+        $generator->onFlush();
+        $this->assertEquals(1, $generator->generate());
+    }
 }

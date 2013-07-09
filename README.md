@@ -72,15 +72,8 @@ use Fabrika\Generator\StringSequence;
 
 class UserProducer extends ModelProducer
 {
-    public function getTableName()
-    {
-        return 'user';
-    }
-
-    public function getModelClass()
-    {
-        return 'OurApplication\Model\User';
-    }
+    protected static $tableName = 'user';
+    protected static $modelClass = 'OurApplication\Model\User';
 
     public function getDefinition()
     {
@@ -99,6 +92,20 @@ Finally, our test class:
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var \PDO
+     */
+    protected static $pdo;
+
+    public static function setUpBeforeClass()
+    {
+        if (self::$pdo == null) {
+            self::$pdo = new \PDO('sqlite::memory:');
+            self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        }
+        ModelProducerProxyAbstract::init(self::$pdo);
+    }
+
     public function testExample()
     {
         $user1 = UserProducer::create();

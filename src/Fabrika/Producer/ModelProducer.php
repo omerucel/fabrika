@@ -2,6 +2,8 @@
 
 namespace Fabrika\Producer;
 
+use Fabrika\IGenerator;
+
 class ModelProducer extends ArrayProducer
 {
     /**
@@ -21,42 +23,14 @@ class ModelProducer extends ArrayProducer
 
     /**
      * @param \PDO $pdo
+     * @param string $tableName
+     * @param string $modelClass
      */
-    public function __construct(\PDO $pdo)
+    public function __construct(\PDO $pdo, $tableName = '', $modelClass = '')
     {
         $this->pdo = $pdo;
-    }
-
-    /**
-     * @param string $tableName
-     */
-    public function setTableName($tableName)
-    {
         $this->tableName = $tableName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        return $this->tableName;
-    }
-
-    /**
-     * @param string $className
-     */
-    public function setModelClass($className)
-    {
-        $this->modelClass = $className;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModelClass()
-    {
-        return $this->modelClass;
+        $this->modelClass = $modelClass;
     }
 
     /**
@@ -84,12 +58,9 @@ class ModelProducer extends ArrayProducer
         $class = $this->build($attributes);
         $attributes = get_object_vars($class);
 
-        $sql = sprintf(
-            'INSERT INTO %s(%s) VALUES(%s)',
-            $this->getTableName(),
-            implode(', ', array_keys($attributes)),
-            substr(str_repeat('?,', count($attributes)), 0, -1)
-        );
+        $attributeKeys = implode(', ', array_keys($attributes));
+        $attributeValues = substr(str_repeat('?,', count($attributes)), 0, -1);
+        $sql = sprintf('INSERT INTO %s(%s) VALUES(%s)', $this->tableName, $attributeKeys, $attributeValues);
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array_values($attributes));
 
@@ -102,7 +73,7 @@ class ModelProducer extends ArrayProducer
      */
     public function delete($id)
     {
-        $sql = 'DELETE FROM ' . $this->getTableName() . ' WHERE id = ?';
+        $sql = 'DELETE FROM ' . $this->tableName . ' WHERE id = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array($id));
         return $stmt->rowCount() == 1;
@@ -113,7 +84,20 @@ class ModelProducer extends ArrayProducer
      */
     public function flush()
     {
-        $sql = 'DELETE FROM ' . $this->getTableName();
+        foreach ($this->getDefinition() as $key => $value) {
+            if ($value instanceof IGenerator) {
+                $value->onFlush();
+            }
+        }
+
+        $sql = 'SELECT COUNT(*) AS count FROM sqlite_master WHERE type="table" AND name=?';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array($this->tableName));
+        if ($stmt->fetchColumn(0) == 0) {
+            return 0;
+        }
+
+        $sql = 'DELETE FROM ' . $this->tableName;
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $stmt->rowCount();
