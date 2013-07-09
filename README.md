@@ -126,6 +126,72 @@ class TestCase extends \PHPUnit_Framework_TestCase
 }
 ```
 
+# Producer Proxies
+
+All producer classes has proxy class. Your model classes must extend a proxy class.
+
+## ArrayProducerProxy
+
+Contains very basic structure for all proxy classes.
+
+## ModelProducerProxy
+
+Extended ArrayProducerProxy. Added create, flush and delete methods.
+
+# Generators
+
+## IntegerSequence
+
+This class generates sequence numeric data. Also you can pass step value. Default step value : 1.
+
+```php
+$generator = new IntegerSequence();
+assert($generator->generate() == 1);
+assert($generator->generate() == 2);
+
+$generator = new IntegerSequence(2);
+assert($generator->generate() == 2);
+assert($generator->generate() == 4);
+```
+
+## StringSequence
+
+This class generates string with sequence numeric data. Also you can pass step value. Default step value : 1.
+
+```php
+$generator = new StringSequence('name{n}');
+assert($generator->generate() == 'name1');
+assert($generator->generate() == 'name2');
+
+$generator = new StringSequence('name{n}', 2);
+assert($generator->generate() == 'name2');
+assert($generator->generate() == 'name4');
+```
+
+## RandomItem
+
+This class selects ramdom data from array.
+
+```php
+$generator = new RandomItem(array('a', 'b', 'c'));
+assert(in_array(array('a', 'b', 'c'), $generator->generate());
+assert(in_array(array('a', 'b', 'c'), $generator->generate());
+```
+
+## RandomNumber
+
+This class generates random number between min and max value.
+
+```php
+$min = 0;
+$max = 3;
+$generator = new RandomItem($min, $max);
+assert(in_array(array(0, 1, 2, 3), $generator->generate());
+assert(in_array(array(0, 1, 2, 3), $generator->generate());
+assert(in_array(array(0, 1, 2, 3), $generator->generate());
+assert(in_array(array(0, 1, 2, 3), $generator->generate());
+```
+
 # License
 
 The MIT License (MIT)
