@@ -2,7 +2,7 @@
 
 namespace Fabrika\Producer;
 
-use Fabrika\IGenerator;
+use Fabrika\IGeneratorOnFlush;
 
 class ModelProducer extends ArrayProducer
 {
@@ -85,7 +85,7 @@ class ModelProducer extends ArrayProducer
     public function flush()
     {
         foreach ($this->getDefinition() as $key => $value) {
-            if ($value instanceof IGenerator) {
+            if ($value instanceof IGeneratorOnFlush) {
                 $value->onFlush();
             }
         }
