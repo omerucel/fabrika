@@ -185,7 +185,7 @@ This class generates random number between min and max value.
 ```php
 $min = 0;
 $max = 3;
-$generator = new RandomItem($min, $max);
+$generator = new RandomNumber($min, $max);
 assert(in_array(array(0, 1, 2, 3), $generator->generate());
 assert(in_array(array(0, 1, 2, 3), $generator->generate());
 assert(in_array(array(0, 1, 2, 3), $generator->generate());
