@@ -24,9 +24,4 @@ interface IProducer
      * @return mixed
      */
     public function build(array $fields = null);
-
-    /**
-     * @return int
-     */
-    public function getStorageCount();
 }

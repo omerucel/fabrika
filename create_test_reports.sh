@@ -10,7 +10,11 @@ echo "Creating phpmd reports..."
 echo "========================="
 echo
 
-vendor/bin/phpmd ./ html codesize,controversial,design,naming,unusedcode --reportfile phpmd/report.html --exclude vendor,tests,coverage,schema
+vendor/bin/phpmd ./ html rulesets/codesize.xml --reportfile phpmd/codesize.html --exclude vendor,tests,coverage,schema
+vendor/bin/phpmd ./ html rulesets/controversial.xml --reportfile phpmd/controversial.html --exclude vendor,tests,coverage,schema
+vendor/bin/phpmd ./ html rulesets/design.xml --reportfile phpmd/design.html --exclude vendor,tests,coverage,schema
+vendor/bin/phpmd ./ html rulesets/naming.xml --reportfile phpmd/naming.html --exclude vendor,tests,coverage,schema
+vendor/bin/phpmd ./ html rulesets/unusedcode.xml --reportfile phpmd/unusedcode.html --exclude vendor,tests,coverage,schema
 
 echo
 echo "Completed! Have a nice day!"

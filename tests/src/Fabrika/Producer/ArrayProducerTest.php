@@ -58,20 +58,6 @@ class ArrayProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('surname', $array);
     }
 
-    public function testGetStorageCount()
-    {
-        $producer = new ArrayProducer();
-        $producer->setDefinition(
-            array(
-                'name' => 'name'
-            )
-        );
-        $producer->build();
-        $producer->build();
-        $producer->build();
-        $this->assertEquals(3, $producer->getStorageCount());
-    }
-
     public function testSupporGenerator()
     {
         $producer = new ArrayProducer();

@@ -13,19 +13,6 @@ class ArrayProducer implements IProducer
     protected $definition = array();
 
     /**
-     * @var array
-     */
-    protected $storage = array();
-
-    /**
-     * @return int
-     */
-    public function getStorageCount()
-    {
-        return count($this->storage);
-    }
-
-    /**
      * @param array $definition
      * @return mixed|void
      */
@@ -59,7 +46,6 @@ class ArrayProducer implements IProducer
             $temp[$field] = $value;
         }
 
-        $this->storage[] = &$temp;
         return $temp;
     }
 }
