@@ -1,9 +1,9 @@
 [![Build Status](https://secure.travis-ci.org/omerucel/fabrika.png)](http://travis-ci.org/omerucel/fabrika)
 [![Coverage](https://coveralls.io/repos/omerucel/fabrika/badge.png?branch=master)](https://coveralls.io/repos/omerucel/fabrika)
 
-# Hakkında
+# About
 
-Fabrika is a fixtures replacement, like [django factory_boy](https://github.com/rbarrois/factory_boy).
+Fabrika is a fixtures replacement, like [django factory_boy](https://github.com/rbarrois/factory_boy), for PHP.
 
 # Requirements
 
