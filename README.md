@@ -3,7 +3,13 @@
 
 # About
 
-Fabrika is a fixtures replacement, like [django factory_boy](https://github.com/rbarrois/factory_boy), for PHP.
+Fabrika is a database fixtures replacement, like [django factory_boy](https://github.com/rbarrois/factory_boy), for PHP.
+Unfortunatly, now only supported PDO and limited model class. Documentation will update as soon as possible. Sorry
+about that..
+
+# Why?
+
+I don't like using PHPUnit/DBUnit datasets. This is the main reason..
 
 # Requirements
 
@@ -66,11 +72,11 @@ This is our model producer class:
 ```php
 <?php
 
-use Fabrika\Producer\ModelProducer;
+use Fabrika\ModelProducerProxyAbstract;
 use Fabrika\Generator\IntegerSequence;
 use Fabrika\Generator\StringSequence;
 
-class UserProducer extends ModelProducer
+class UserProducer extends ModelProducerProxyAbstract
 {
     protected static $tableName = 'user';
     protected static $modelClass = 'OurApplication\Model\User';
