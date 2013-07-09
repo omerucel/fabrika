@@ -2,6 +2,7 @@
 
 namespace Fabrika\Producer;
 
+use Fabrika\IGenerator;
 use Fabrika\IProducer;
 
 class ArrayProducer implements IProducer
@@ -47,22 +48,15 @@ class ArrayProducer implements IProducer
      */
     public function build(array $attributes = null)
     {
+        $attributes = $attributes == null ? $this->getDefinition() : array_merge($this->getDefinition(), $attributes);
+
         $temp = array();
-        foreach ($this->getDefinition() as $field => $value) {
-            // override fields
-            if (isset($attributes[$field])) {
-                $value = $attributes[$field];
-                unset($attributes[$field]);
+        foreach ($attributes as $field => $value) {
+            if ($value instanceof IGenerator) {
+                $value = $value->generate();
             }
 
             $temp[$field] = $value;
-        }
-
-        // new fields
-        if (!is_null($attributes)) {
-            foreach ($attributes as $field => $value) {
-                $temp[$field] = $value;
-            }
         }
 
         $this->storage[] = &$temp;

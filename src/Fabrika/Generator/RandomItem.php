@@ -30,6 +30,6 @@ class RandomItem implements IGenerator
      */
     public function generate()
     {
-        return $this->array[rand(0, $this->count)];
+        return $this->array[rand(0, $this->count - 1)];
     }
 }

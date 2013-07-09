@@ -2,6 +2,8 @@
 
 namespace Fabrika\Producer;
 
+use Fabrika\Generator\StringSequence;
+
 class ArrayProducerTest extends \PHPUnit_Framework_TestCase
 {
     public function testInstanceOf()
@@ -68,5 +70,23 @@ class ArrayProducerTest extends \PHPUnit_Framework_TestCase
         $producer->build();
         $producer->build();
         $this->assertEquals(3, $producer->getStorageCount());
+    }
+
+    public function testSupporGenerator()
+    {
+        $producer = new ArrayProducer();
+        $producer->setDefinition(
+            array(
+                'name' => new StringSequence('name{n}')
+            )
+        );
+
+        $array1 = $producer->build();
+        $array2 = $producer->build();
+
+        $this->assertArrayHasKey('name', $array1);
+        $this->assertArrayHasKey('name', $array2);
+        $this->assertEquals('name1', $array1['name']);
+        $this->assertEquals('name2', $array2['name']);
     }
 }
