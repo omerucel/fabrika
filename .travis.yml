@@ -10,4 +10,8 @@ before_script:
   - php composer.phar install --prefer-source --no-interaction --dev
 
 script:
-  - phpunit
+  - mkdir -p build/logs
+  - phpunit --coverage-clover build/logs/clover.xml
+
+after_success:
+ - php vendor/bin/coveralls -v
