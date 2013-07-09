@@ -1,0 +1,5 @@
+.idea
+phpmd
+coverage
+composer.lock
+vendor

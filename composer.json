@@ -1,0 +1,26 @@
+{
+    "name": "omerucel/fabrika",
+    "type": "library",
+    "homepage": "https://github.com/omerucel/fabrika",
+    "keywords": ["fabrika"],
+    "licence": "MIT",
+    "authors": [
+        {
+            "name": "Ömer ÜCEL",
+            "email": "omerucel@gmail.com"
+        }
+    ],
+    "target-dir": "Fabrika",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*",
+        "phpmd/phpmd": "1.4.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "Fabrika\\": "src/"
+        }
+    }
+}
