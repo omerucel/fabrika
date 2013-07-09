@@ -91,7 +91,9 @@ class UserProducer extends ModelProducerProxyAbstract
 }
 ```
 
-Finally, our test class:
+Finally, our test class. You must create manually your database tables! Maybe very usable an abstract test case class
+for your tests..
+
 ```php
 <?php
 
@@ -114,6 +116,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     public function testExample()
     {
+        self::$pdo->exec('CREATE TABLE IF NOT EXISTS user(id INTEGER, name)');
+
         $user1 = UserProducer::create();
         $user2 = UserProducer::create();
 
