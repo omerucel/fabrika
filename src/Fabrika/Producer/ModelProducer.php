@@ -69,7 +69,13 @@ class ModelProducer extends ArrayProducer
     public function create(array $attributes = null)
     {
         $class = $this->build($attributes);
-        $attributes = get_object_vars($class);
+        $tempAttributes = get_object_vars($class);
+        $attributes = array();
+        foreach ($tempAttributes as $key => $value) {
+            if (!in_array($key, $this->excludedFields)) {
+                $attributes[$key] = $value;
+            }
+        }
 
         $attributeKeys = implode(', ', array_keys($attributes));
         $attributeValues = substr(str_repeat('?,', count($attributes)), 0, -1);

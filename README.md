@@ -58,6 +58,11 @@ class User
     public $status;
 
     /**
+     * @var array
+     */
+    public $service_ids = array();
+
+    /**
      * @return bool
      */
     public function isActive()
@@ -80,6 +85,7 @@ class UserProducer extends ModelProducerProxyAbstract
 {
     protected static $tableName = 'user';
     protected static $modelClass = 'OurApplication\Model\User';
+    protected static $excludedFields = array('service_ids');
 
     public function getDefinition()
     {
