@@ -127,6 +127,27 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         self::$pdo->exec('DROP TABLE user');
     }
 
+    public function testExcludedFields()
+    {
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\UserExtraField';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
+        $producer->setExcludedFields(array('excluded'));
+
+        $producer->setDefinition(
+            array(
+                'id' => new IntegerSequence(),
+                'name' => new StringSequence('name{n}')
+            )
+        );
+
+        self::$pdo->exec('CREATE TABLE user(id INTEGER, name, excluded);');
+        $user = $producer->create();
+        $this->assertObjectHasAttribute('excluded', $user);
+
+        $producer->flush();
+    }
+
     public function testFlushMustRestSequenceCounters()
     {
 

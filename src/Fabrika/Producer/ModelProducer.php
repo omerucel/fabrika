@@ -22,6 +22,11 @@ class ModelProducer extends ArrayProducer
     protected $modelClass;
 
     /**
+     * @var array
+     */
+    protected $excludedFields = array();
+
+    /**
      * @param \PDO $pdo
      * @param string $tableName
      * @param string $modelClass
@@ -31,6 +36,14 @@ class ModelProducer extends ArrayProducer
         $this->pdo = $pdo;
         $this->tableName = $tableName;
         $this->modelClass = $modelClass;
+    }
+
+    /**
+     * @param array $fields
+     */
+    public function setExcludedFields(array $fields)
+    {
+        $this->excludedFields = $fields;
     }
 
     /**

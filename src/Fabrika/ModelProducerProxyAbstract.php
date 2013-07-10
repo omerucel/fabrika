@@ -13,6 +13,7 @@ abstract class ModelProducerProxyAbstract extends ArrayProducerProxyAbstract
 
     protected static $tableName = '';
     protected static $modelClass = '';
+    protected static $excludedFields = array();
 
     /**
      * @param \PDO $pdo
@@ -57,6 +58,7 @@ abstract class ModelProducerProxyAbstract extends ArrayProducerProxyAbstract
         if (!isset(static::$producers[$class])) {
             $producer = new ModelProducer(static::$pdo, static::$tableName, static::$modelClass);
             $producer->setDefinition(static::getDefinition());
+            $producer->setExcludedFields(static::$excludedFields);
             static::$producers[$class] = $producer;
         }
 

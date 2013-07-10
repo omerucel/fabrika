@@ -3,7 +3,7 @@ echo "Running PHPUnit Tests..."
 echo "========================"
 echo
 
-mkdir coverate
+mkdir coverage
 vendor/bin/phpunit --configuration phpunit.xml --coverage-html coverage
 
 echo

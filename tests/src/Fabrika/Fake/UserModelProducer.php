@@ -10,6 +10,7 @@ class UserModelProducer extends ModelProducerProxyAbstract
 {
     protected static $tableName = 'user';
     protected static $modelClass = '\Fabrika\Producer\Fake\User';
+    protected static $excludedFields = array('excluded');
 
     /**
      * @return array
