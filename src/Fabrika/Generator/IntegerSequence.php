@@ -4,8 +4,9 @@ namespace Fabrika\Generator;
 
 use Fabrika\IGenerator;
 use Fabrika\IGeneratorOnFlush;
+use Fabrika\IGeneratorOnIncrementCounter;
 
-class IntegerSequence implements IGenerator, IGeneratorOnFlush
+class IntegerSequence implements IGenerator, IGeneratorOnFlush, IGeneratorOnIncrementCounter
 {
     /**
      * @var int
@@ -36,5 +37,14 @@ class IntegerSequence implements IGenerator, IGeneratorOnFlush
     public function onFlush()
     {
         $this->counter = 0;
+    }
+
+    public function onIncrementCounter($step = 1)
+    {
+        if ($step < 1) {
+            $step = 1;
+        }
+
+        $this->counter = $this->counter + $step;
     }
 }

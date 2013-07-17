@@ -32,4 +32,14 @@ class IntegerSequenceTest extends \PHPUnit_Framework_TestCase
         $generator->onFlush();
         $this->assertEquals(1, $generator->generate());
     }
+
+    public function testOnIncrementCounter()
+    {
+        $generator = new IntegerSequence();
+        $this->assertEquals(1, $generator->generate());
+        $generator->onIncrementCounter();
+        $this->assertEquals(3, $generator->generate());
+        $generator->onIncrementCounter(5);
+        $this->assertEquals(9, $generator->generate());
+    }
 }

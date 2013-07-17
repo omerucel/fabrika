@@ -174,4 +174,37 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
 
         $producer->flush();
     }
+
+    public function testIncrementCounters()
+    {
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer(self::$pdo, $tableName, $modelClass);
+
+        $producer->setDefinition(
+            array(
+                'id' => new IntegerSequence(),
+                'name' => new StringSequence('name{n}')
+            )
+        );
+
+        /**
+         * @var \Fabrika\Producer\Fake\User $user1
+         * @var \Fabrika\Producer\Fake\User $user2
+         */
+        $user1 = $producer->build();
+        $user2 = $producer->build();
+        $this->assertInstanceOf($modelClass, $user1);
+        $this->assertInstanceOf($modelClass, $user2);
+        $this->assertEquals('name1', $user1->name);
+        $this->assertEquals('name2', $user2->name);
+
+        $producer->incrementCounters();
+        $user3 = $producer->build();
+        $this->assertEquals('name4', $user3->name);
+
+        $producer->incrementCounters(5);
+        $user4 = $producer->build();
+        $this->assertEquals('name10', $user4->name);
+    }
 }

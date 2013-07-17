@@ -3,6 +3,7 @@
 namespace Fabrika\Producer;
 
 use Fabrika\IGeneratorOnFlush;
+use Fabrika\IGeneratorOnIncrementCounter;
 
 class ModelProducer extends ArrayProducer
 {
@@ -134,5 +135,14 @@ class ModelProducer extends ArrayProducer
         }
 
         return $count;
+    }
+
+    public function incrementCounters($step = 1)
+    {
+        foreach ($this->getDefinition() as $key => $value) {
+            if ($value instanceof IGeneratorOnIncrementCounter) {
+                $value->onIncrementCounter($step);
+            }
+        }
     }
 }
