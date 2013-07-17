@@ -103,22 +103,36 @@ class ModelProducer extends ArrayProducer
      */
     public function flush()
     {
+        $driverName = $this->pdo->getAttribute(\PDO::ATTR_DRIVER_NAME);
+        if ($driverName == 'sqlite') {
+            $sql = 'SELECT COUNT(*) AS count FROM sqlite_master WHERE type="table" AND name=?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(array($this->tableName));
+            if ($stmt->fetchColumn(0) == 0) {
+                $count = 0;
+            } else {
+                $sql = 'DELETE FROM ' . $this->tableName;
+                $stmt = $this->pdo->prepare($sql);
+                $stmt->execute();
+                $count = $stmt->rowCount();
+            }
+        } elseif ($driverName == 'mysql') {
+            $sql = 'DELETE FROM ' . $this->tableName;
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+
+            $sql = 'TRUNCATE TABLE ' . $this->tableName;
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+        }
+
         foreach ($this->getDefinition() as $key => $value) {
             if ($value instanceof IGeneratorOnFlush) {
                 $value->onFlush();
             }
         }
 
-        $sql = 'SELECT COUNT(*) AS count FROM sqlite_master WHERE type="table" AND name=?';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(array($this->tableName));
-        if ($stmt->fetchColumn(0) == 0) {
-            return 0;
-        }
-
-        $sql = 'DELETE FROM ' . $this->tableName;
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        return $stmt->rowCount();
+        return $count;
     }
 }

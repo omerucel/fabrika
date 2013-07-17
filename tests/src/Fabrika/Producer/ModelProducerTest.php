@@ -105,7 +105,7 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         self::$pdo->exec('DROP TABLE user');
     }
 
-    public function testFlush()
+    public function testFlushSqlite()
     {
         $tableName = 'user';
         $modelClass = 'Fabrika\Producer\Fake\User';
@@ -119,12 +119,39 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         );
 
         self::$pdo->exec('CREATE TABLE user(id INTEGER, name);');
-        self::$pdo->exec('INSERT INTO user(id, name) VALUES(1, "name1")');
-        self::$pdo->exec('INSERT INTO user(id, name) VALUES(2, "name2")');
+
+        $producer->create();
+        $producer->create();
 
         $this->assertEquals(2, $producer->flush());
 
         self::$pdo->exec('DROP TABLE user');
+    }
+
+    public function testFlushMysql()
+    {
+        $pdo = new \PDO('mysql:host=127.0.0.1;dbname=test', 'root', '');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $pdo->exec('CREATE TABLE IF NOT EXISTS user(id INT, name VARCHAR(255)) ENGINE=MEMORY;');
+
+        $tableName = 'user';
+        $modelClass = 'Fabrika\Producer\Fake\User';
+        $producer = new ModelProducer($pdo, $tableName, $modelClass);
+
+        $producer->setDefinition(
+            array(
+                'id' => new IntegerSequence(),
+                'name' => new StringSequence('name{n}')
+            )
+        );
+
+        $producer->create();
+        $producer->create();
+
+        $this->assertEquals(2, $producer->flush());
+
+        $pdo->exec('DROP TABLE user');
+        unset($pdo);
     }
 
     public function testExcludedFields()
@@ -146,10 +173,5 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('excluded', $user);
 
         $producer->flush();
-    }
-
-    public function testFlushMustRestSequenceCounters()
-    {
-
     }
 }
