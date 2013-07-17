@@ -41,6 +41,14 @@ abstract class ModelProducerProxyAbstract extends ArrayProducerProxyAbstract
     }
 
     /**
+     * @param int $step
+     */
+    public static function incrementCounters($step = 1)
+    {
+        static::getProducer()->incrementCounters($step);
+    }
+
+    /**
      * @param $id
      * @return bool
      */

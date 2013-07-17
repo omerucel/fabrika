@@ -74,4 +74,11 @@ class ModelProducerProxyAbstractTest extends \PHPUnit_Framework_TestCase
 
         UserModelProducer::flush();
     }
+
+    public function testIncrementCounters()
+    {
+        UserModelProducer::incrementCounters(5);
+        $user = UserModelProducer::build();
+        $this->assertEquals(6, $user->id);
+    }
 }
