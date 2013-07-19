@@ -2,6 +2,8 @@
 
 namespace Fabrika\Producer;
 
+use Fabrika\Fake\UserAutoIncrementModelProducer;
+use Fabrika\Generator\AutoIncrement;
 use Fabrika\Generator\IntegerSequence;
 use Fabrika\Generator\StringSequence;
 
@@ -173,6 +175,8 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('excluded', $user);
 
         $producer->flush();
+
+        self::$pdo->exec('DROP TABLE user');
     }
 
     public function testIncrementCounters()
@@ -206,5 +210,29 @@ class ModelProducerTest extends \PHPUnit_Framework_TestCase
         $producer->incrementCounters(5);
         $user4 = $producer->build();
         $this->assertEquals('name10', $user4->name);
+    }
+
+    public function testAutoIncrement()
+    {
+        $producer = new ModelProducer(self::$pdo, 'user', 'Fabrika\Producer\Fake\User');
+        $producer->setDefinition(
+            array(
+                'id' => new AutoIncrement(),
+                'name' => new StringSequence('name{n}')
+            )
+        );
+        $producer->build();
+        $producer->build();
+        $model = $producer->build();
+        $this->assertEquals(3, $model->id);
+
+        $producer->flush();
+
+        self::$pdo->exec('CREATE TABLE user(id INTEGER, name);');
+        $producer->incrementCounters(100);
+        $producer->create();
+        $producer->create();
+        $model = $producer->create();
+        $this->assertEquals(3, $model->id);
     }
 }

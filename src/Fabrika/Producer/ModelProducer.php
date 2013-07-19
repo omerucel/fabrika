@@ -2,6 +2,7 @@
 
 namespace Fabrika\Producer;
 
+use Fabrika\Generator\AutoIncrement;
 use Fabrika\IGeneratorOnFlush;
 use Fabrika\IGeneratorOnIncrementCounter;
 
@@ -72,7 +73,14 @@ class ModelProducer extends ArrayProducer
         $class = $this->build($attributes);
         $tempAttributes = get_object_vars($class);
         $attributes = array();
+        $definition = $this->getDefinition();
+        $autoIncrementKey = null;
         foreach ($tempAttributes as $key => $value) {
+            if (isset($definition[$key]) && $definition[$key] instanceof AutoIncrement) {
+                $autoIncrementKey = $key;
+                continue;
+            }
+
             if (!in_array($key, $this->excludedFields)) {
                 $attributes[$key] = $value;
             }
@@ -83,6 +91,10 @@ class ModelProducer extends ArrayProducer
         $sql = sprintf('INSERT INTO %s(%s) VALUES(%s)', $this->tableName, $attributeKeys, $attributeValues);
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(array_values($attributes));
+
+        if ($autoIncrementKey != null) {
+            $class->{$autoIncrementKey} = $this->pdo->lastInsertId();
+        }
 
         return $class;
     }
