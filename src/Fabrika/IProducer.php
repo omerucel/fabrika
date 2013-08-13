@@ -9,19 +9,53 @@ namespace Fabrika;
 interface IProducer
 {
     /**
-     * @param array $definition
-     * @return mixed
+     * @param string|Definition $definition
+     * @return Definition
      */
-    public function setDefinition(array $definition);
+    public function define($definition);
 
     /**
-     * @return array
+     * @param $tableName
+     * @return bool
      */
-    public function getDefinition();
+    public function hasDefinition($tableName);
 
     /**
-     * @param array $fields
+     * @param $tableName
+     * @return Definition|null
+     */
+    public function getDefinition($tableName);
+
+    /**
+     * @param $tableName
+     * @param array $overrideFields
      * @return mixed
      */
-    public function build(array $fields = null);
+    public function build($tableName, array $overrideFields = null);
+
+    /**
+     * @param $tableName
+     * @param array $overrideFields
+     * @return mixed
+     */
+    public function create($tableName, array $overrideFields = null);
+
+    /**
+     * @param string|null $tableName
+     * @return mixed
+     */
+    public function flush($tableName);
+
+    /**
+     * @param $tableName
+     * @return mixed
+     */
+    public function onFlush($tableName);
+
+    /**
+     * @param $tableName
+     * @param int $step
+     * @return mixed
+     */
+    public function onIncrementCounters($tableName, $step = 1);
 }

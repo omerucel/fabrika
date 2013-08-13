@@ -4,5 +4,9 @@ namespace Fabrika;
 
 interface IGeneratorOnIncrementCounter
 {
-    public function onIncrementCounter();
+    /**
+     * @param int $step
+     * @return mixed
+     */
+    public function onIncrementCounter($step = 1);
 }

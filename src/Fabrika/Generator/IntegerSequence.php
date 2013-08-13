@@ -42,7 +42,7 @@ class IntegerSequence implements IGenerator, IGeneratorOnFlush, IGeneratorOnIncr
     public function onIncrementCounter($step = 1)
     {
         if ($step < 1) {
-            $step = 1;
+            $step = 0;
         }
 
         $this->counter = $this->counter + $step;

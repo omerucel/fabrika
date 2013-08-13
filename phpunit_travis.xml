@@ -27,8 +27,8 @@
 
     <php>
         <!-- MySQL -->
-        <var name="DB_MYSQL_DSN" value="mysql:host=127.0.0.1;port=3307;dbname=test;charset=utf8" />
-        <var name="DB_MYSQL_USER" value="root" />
+        <var name="DB_MYSQL_DSN" value="mysql:host=127.0.0.1;dbname=fabrika_test;charset=utf8" />
+        <var name="DB_MYSQL_USER" value="travis" />
         <var name="DB_MYSQL_PASS" value="" />
     </php>
 </phpunit>

@@ -3,22 +3,41 @@
 
 # About
 
-Fabrika is a database fixtures replacement, like [django factory_boy](https://github.com/rbarrois/factory_boy), for PHP.
-Unfortunatly, now only supported PDO and limited model class. Documentation will update as soon as possible. Sorry
-about that..
-
-# Why?
-
-I don't like using PHPUnit/DBUnit datasets. This is the main reason..
+Fabrika is a database fixtures replacement for PHP.
 
 # Requirements
 
 - PHP 5.3+
 
+# Usage
+
+```php
+<?php
+
+use Fabrika\Generator\AutoIncrement;
+use Fabrika\Generator\StringSequence;
+
+$pdo = new \PDO('mysql:host=127.0.0.1;port=3306;dbname=test;charset=utf8', 'root', '');
+$connection = new Fabrika\Producer\Database\Connection\MySQL($pdo);
+$producer = new Fabrika\Producer\DatabaseProducer($connection);
+
+$producer->define('user')
+    ->addField('id', new AutoIncrement())
+    ->addField('username', new StringSequence('username{n}'));
+
+$user1 = $producer->create('user');
+$user2 = $producer->create('user');
+
+assert($user1->id == 1);
+assert($user1->username == 'username1');
+
+assert($user2->id == 2);
+assert($user2->username == 'username2');
+```
+
 # Installation
 
-Fabrika has composer support. Change your composer.json file and update composer.
-
+conposer.json:
 ```json
 {
     "require-dev": {
@@ -28,178 +47,7 @@ Fabrika has composer support. Change your composer.json file and update composer
 ```
 
 ```bash
-$ composer update
-```
-
-# Usage
-
-This is our model class:
-
-```php
-<?php
-
-namespace OurApplication\Model;
-
-class User
-{
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $name;
-
-    /**
-     * @var int
-     */
-    public $status;
-
-    /**
-     * @var array
-     */
-    public $service_ids = array();
-
-    /**
-     * @return bool
-     */
-    public function isActive()
-    {
-        return $this->status == 1;
-    }
-}
-
-```
-
-This is our model producer class:
-```php
-<?php
-
-use Fabrika\ModelProducerProxyAbstract;
-use Fabrika\Generator\IntegerSequence;
-use Fabrika\Generator\StringSequence;
-
-class UserProducer extends ModelProducerProxyAbstract
-{
-    protected static $tableName = 'user';
-    protected static $modelClass = 'OurApplication\Model\User';
-    protected static $excludedFields = array('service_ids');
-
-    public function getDefinition()
-    {
-        return array(
-            'id' => new IntegerSequence(),
-            'name' => new StringSequence('name{n}');
-        );
-    }
-}
-```
-
-Finally, our test class. You must create manually your database tables! Maybe very usable an abstract test case class
-for your tests..
-
-```php
-<?php
-
-
-class TestCase extends \PHPUnit_Framework_TestCase
-{
-    /**
-     * @var \PDO
-     */
-    protected static $pdo;
-
-    public static function setUpBeforeClass()
-    {
-        if (self::$pdo == null) {
-            self::$pdo = new \PDO('sqlite::memory:');
-            self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        }
-        ModelProducerProxyAbstract::init(self::$pdo);
-    }
-
-    public function testExample()
-    {
-        self::$pdo->exec('CREATE TABLE IF NOT EXISTS user(id INTEGER, name)');
-
-        $user1 = UserProducer::create();
-        $user2 = UserProducer::create();
-
-        // Your test case lines
-
-        UserProducer::flush();
-        // or
-        UserProducer::delete($user1->id);
-    }
-}
-```
-
-# Producer Proxies
-
-All producer classes has proxy class. Your model classes must extend a proxy class.
-
-## ArrayProducerProxy
-
-Contains very basic structure for all proxy classes.
-
-## ModelProducerProxy
-
-Extended ArrayProducerProxy. Added create, flush and delete methods.
-
-# Generators
-
-## IntegerSequence
-
-This class generates sequence numeric data. Also you can pass step value. Default step value : 1.
-
-```php
-$generator = new IntegerSequence();
-assert($generator->generate() == 1);
-assert($generator->generate() == 2);
-
-$generator = new IntegerSequence(2);
-assert($generator->generate() == 2);
-assert($generator->generate() == 4);
-```
-
-## StringSequence
-
-This class generates string with sequence numeric data. Also you can pass step value. Default step value : 1.
-
-```php
-$generator = new StringSequence('name{n}');
-assert($generator->generate() == 'name1');
-assert($generator->generate() == 'name2');
-
-$generator = new StringSequence('name{n}', 2);
-assert($generator->generate() == 'name2');
-assert($generator->generate() == 'name4');
-```
-
-## RandomItem
-
-This class selects ramdom data from array.
-
-```php
-$generator = new RandomItem(array('a', 'b', 'c'));
-assert(in_array(array('a', 'b', 'c'), $generator->generate());
-assert(in_array(array('a', 'b', 'c'), $generator->generate());
-```
-
-## RandomNumber
-
-This class generates random number between min and max value.
-
-```php
-$min = 0;
-$max = 3;
-$generator = new RandomNumber($min, $max);
-assert(in_array(array(0, 1, 2, 3), $generator->generate());
-assert(in_array(array(0, 1, 2, 3), $generator->generate());
-assert(in_array(array(0, 1, 2, 3), $generator->generate());
-assert(in_array(array(0, 1, 2, 3), $generator->generate());
+$ composer install
 ```
 
 # License

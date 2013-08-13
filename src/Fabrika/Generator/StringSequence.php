@@ -9,10 +9,22 @@ class StringSequence extends IntegerSequence
      */
     protected $string;
 
+    /**
+     * @param string $string
+     * @param int $step
+     */
     public function __construct($string = '{n}', $step = 1)
     {
         parent::__construct($step);
         $this->string = $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function getString()
+    {
+        return $this->string;
     }
 
     /**
