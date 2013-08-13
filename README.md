@@ -1,5 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/omerucel/fabrika.png)](http://travis-ci.org/omerucel/fabrika)
-[![Coverage](https://coveralls.io/repos/omerucel/fabrika/badge.png?branch=master)](https://coveralls.io/repos/omerucel/fabrika)
+[![Coverage Status](https://coveralls.io/repos/omerucel/fabrika/badge.png?branch=master)](https://coveralls.io/r/omerucel/fabrika?branch=master)
 
 # About
 
